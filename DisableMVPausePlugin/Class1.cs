@@ -10,7 +10,7 @@ using UnityEngine;
 namespace DisableMVPausePlugin
 {
     [BepInProcess("imascgstage.exe")]
-    [BepInPlugin("toumei.changeServerPlugin", "changeServerPlugin", "1.0")]
+    [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
         public class Main : BaseUnityPlugin
     {
 
