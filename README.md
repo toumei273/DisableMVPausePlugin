@@ -1,2 +1,6 @@
 # DisableMVPausePlugin
  A BepInEx plugin for imascgstage
+
+フリーカメラプラグイン使用時にいちいちポーズされるのがめんどくさいので、クリック時にポーズされるのを無効化するプラグインを作った
+
+代わりにPキーでポーズします
