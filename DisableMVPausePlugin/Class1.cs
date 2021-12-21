@@ -16,10 +16,10 @@ namespace DisableMVPausePlugin
 
         public const string PluginGuid = "toumei.cgss.DisableMVPause";
         public const string PluginName = "DisableMVPausePlugin";
-        public const string PluginVersion = "1.0.0.0";
+        public const string PluginVersion = "1.1.0.0";
         public void Awake()
         {
-            Logger.LogInfo($"Plugin DisableMVPausePlugin is loaded!");
+            Logger.LogInfo($"Plugin {PluginName} is loaded!");
             new Harmony(PluginGuid).PatchAll();
         }
 
@@ -42,6 +42,30 @@ namespace DisableMVPausePlugin
 
                     .SetAndAdvance(OpCodes.Ldc_I4_S, 0x70)
                     .SetAndAdvance(OpCodes.Call, AccessTools.Method(typeof(UnityEngine.Input), "GetKeyInt", typeArgs))
+                    .InstructionEnumeration();
+                    
+                return inst;
+            }
+        }
+
+        [HarmonyPatch(typeof(LiveController), "Update_Input")]
+        internal class ChangePausePopupKey //ポーズ表示を消したとき、クリックで再ポップアップしない
+        {
+            [HarmonyTranspiler]
+            public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+            {
+                Type myType = typeof(LiveController);
+                Type[] typeArgs = { typeof(KeyCode)};
+                MethodInfo myMethod = myType.GetMethod("Update_Input");
+                IEnumerable<CodeInstruction> inst =  (IEnumerable<CodeInstruction>)new CodeMatcher(instructions)
+                    .Start()
+                    .MatchForward(false, 
+                        new CodeMatch(OpCodes.Ldc_I4_0),
+                        new CodeMatch(OpCodes.Call))
+
+                    .SetAndAdvance(OpCodes.Ldc_I4_S, 0x70)
+                    .SetAndAdvance(OpCodes.Call, AccessTools.Method(typeof(UnityEngine.Input), "GetKeyInt", typeArgs))
+
                     .InstructionEnumeration();
                     
                 return inst;
